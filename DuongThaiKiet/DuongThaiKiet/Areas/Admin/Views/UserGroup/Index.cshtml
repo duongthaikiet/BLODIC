@@ -1,0 +1,193 @@
+﻿@model DuongThaiKiet.DTKEF.AdminUserGroupModel
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<script>
+    function getUserDetail(id) {
+        var data = JSON.stringify({
+            userId: id,
+            isUser: true
+        });
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("GetUserDetail", "UserGroup", new {Area = "Admin"})",
+            data: data,
+            contentType: "application/json; charset=utf-8",
+            success: function (data) {
+                $("#username").val(data.User.UserName);
+                $("#email").val(data.User.Email);
+                $("#firstname").val(data.User.FirstName);
+                $("#lastname").val(data.User.LastName);
+            },
+            error: function () {
+                $('#myModal').modal('show');
+            }
+        });
+    }
+
+    function isBreakpoint(alias) {
+        return $('.device-' + alias).is(':visible');
+    }
+
+    $(window).resize(function () {
+        TransformUserList();
+    });
+
+    function TransformUserList() {
+        if (!isBreakpoint('xs')) {
+            $("#lstUserGroup").attr("multiple", "multiple");
+            //$("#lstUserGroup").css("min-height", "400px");
+            $("#navUser").addClass("nav-user");
+        } else {
+            $("#lstUserGroup").removeAttr("multiple");
+            //$("#lstUserGroup").css("min-height", "34px");
+            $("#navUser").removeClass("nav-user");
+        }
+    }
+
+    $.extend($.expr[':'], {
+        'containsi': function (elem, i, match, array) {
+            return (elem.textContent || elem.innerText || '').toLowerCase()
+                .indexOf((match[3] || "").toLowerCase()) >= 0;
+        }
+    });
+
+    $(document).ready(function () {
+        TransformUserList();
+        $('#txtFilter').bind('input', function () {
+            var filter = $("#txtFilter").val().trim();
+            $('#lstUserGroup option:not(:containsi("' + filter + '"))').hide();
+            $('#lstUserGroup option:containsi("' + filter + '")').show();
+        });
+
+        $("#lstUserGroup").change(function () {
+            getUserDetail($("#lstUserGroup option:selected").val());
+        });
+        
+        //$(".container-fluid").height($("#wrap").height() - $("#myNavbar").height());
+    });
+
+</script>
+<head>
+    <title>User & Group Management</title>
+</head>
+
+<div class="modal fade" id="myModal" role="dialog">
+    <div class="modal-dialog">
+
+        <!-- Modal content-->
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal">&times;</button>
+                <h4 class="modal-title">Modal Header</h4>
+            </div>
+            <div class="modal-body">
+                <p>Error fetching data</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+        </div>
+
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-sm-3 nav-user" style="background-color: lightblue;" id="navUser">
+        <div class="row">
+            <div class="col-sm-12" style="padding: 10px;">
+                <label for="sel2">Select user/group:</label>
+                <select class="form-control">
+                    <option value="1" selected>User</option>
+                    <option value="2">Group</option>
+                </select>
+                <label for="sel2">Search for user/group:</label>
+                <input id="txtFilter" class="form-control" style="width: 100%;" placeholder="Filter user/group here">
+                <!--<input id="txtTest" class="form-control" style="width: 100%;" placeholder="Test">-->
+                <label for="sel2">Available user/group:</label>
+                @Html.ListBoxFor(x => x.SelectedItemIds, new SelectList(Model.Items, "Value", "Text"), htmlAttributes: new { id = "lstUserGroup", @class = "form-control", style = "width:100%;" })
+            </div>
+        </div>
+        <div class="row" style="margin-bottom: 10px;">
+            <div class="col-sm-6" style="margin: 0px">
+                <button class="form-control" value="Export"><span class="ellipsis-text">Export</span></button>
+            </div>
+            <div class="col-sm-6" style="margin: 0px">
+                <button class="form-control" value="Delete"><span class="ellipsis-text">Delete</span></button>
+            </div>
+        </div>
+    </div>
+    <div class="col-sm-9" style="padding-top: 10px">
+        <ul class="nav nav-tabs">
+            <li class="active"><a data-toggle="tab" href="#home">User Info</a></li>
+            <li><a data-toggle="tab" href="#menu1">Dictionary Access</a></li>
+            <li><a data-toggle="tab" href="#menu2">Blog Access</a></li>
+            <li><a data-toggle="tab" href="#menu3">Report</a></li>
+        </ul>
+
+        <div class="tab-content">
+            <div id="home" class="tab-pane fade in active">
+
+                <form role="form" style="padding-top: 10px">
+                    <h4>Account Info</h4>
+                    <div class="row" style="margin-bottom: 10px">
+                        <label class="col-sm-1 control-label" for="inputsm">Username</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control input-sm" id="username">
+                        </div>
+                        <label class="col-sm-1 control-label" for="inputsm">Email</label>
+                        <div class="col-sm-5">
+                            <input type="email" class="form-control input-sm" id="email">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 10px">
+                        <label class="col-sm-1 control-label" for="inputsm">Password</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control input-sm" id="password">
+                        </div>
+                        <label class="col-sm-1 control-label" for="inputsm">Confirm Password</label>
+                        <div class="col-sm-5">
+                            <input type="password" class="form-control input-sm" id="confirm-password">
+                        </div>
+                    </div>
+                    <h4>User Info</h4>
+                    <div class="row" style="margin-bottom: 10px">
+                        <label class="col-sm-1 control-label" for="inputsm">First Name</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control input-sm" id="firstname">
+                        </div>
+                        <label class="col-sm-1 control-label" for="inputsm">Last Name</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control input-sm" id="lastname">
+                        </div>
+                    </div>
+                    <div class="row" style="margin-bottom: 10px">
+                        <label class="col-sm-1 control-label" for="inputsm">Gender</label>
+                        <div class="col-sm-5">
+                            <input type="radio" class="form-control input-sm" id="gender">Male
+                            <input type="radio" class="form-control input-sm" id="gender">Female
+                        </div>
+                        <label class="col-sm-1 control-label" for="inputsm">Some Data</label>
+                        <div class="col-sm-5">
+                            <input type="text" class="form-control input-sm">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div id="menu1" class="tab-pane fade">
+                <h3>Dictionary Access</h3>
+                <p>Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</p>
+            </div>
+            <div id="menu2" class="tab-pane fade">
+                <h3>Blog Access</h3>
+                <p>Sed ut perspiciatis unde omnis iste natus error sit voluptatem accusantium doloremque laudantium, totam rem aperiam.</p>
+            </div>
+            <div id="menu3" class="tab-pane fade">
+                <h3>Report</h3>
+                <p>Eaque ipsa quae ab illo inventore veritatis et quasi architecto beatae vitae dicta sunt explicabo.</p>
+            </div>
+        </div>
+    </div>
+</div>

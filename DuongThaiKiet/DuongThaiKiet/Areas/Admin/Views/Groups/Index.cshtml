@@ -1,0 +1,20 @@
+﻿@model IEnumerable<DuongThaiKiet.DTKEF.AdminGroupModel>
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<h2>Group Management</h2>
+<body>
+    <table>
+        <tr>
+            <th>@Html.DisplayNameFor(model => model.GroupName)</th>
+        </tr>
+        @foreach (var item in Model)
+        {
+            <tr>
+            <td>@Html.DisplayFor(itemModel => item.GroupName)</td>
+            </tr>
+        }
+    </table>
+</body>

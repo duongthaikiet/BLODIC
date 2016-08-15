@@ -1,0 +1,65 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>@ViewBag.Title - Duong Thai Kiet's Website</title>
+    <link rel="icon" href="~/Content/Images/site_icon_1_32x32.ico">
+    <link rel="stylesheet" href="~/Content/Site.css">
+    <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.0/jquery.min.js"></script>
+    <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js"></script>
+</head>
+<body>
+    <div id="wrap">
+        <nav class="navbar navbar-inverse" style="border-radius: 0;margin-bottom: 0">
+            <div class="container-fluid">
+                <div class="navbar-header">
+                    <button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#myNavbar">
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                        <span class="icon-bar"></span>
+                    </button>
+                    <a class="navbar-brand" href="#">Duong Thai Kiet</a>
+                </div>
+                <div class="collapse navbar-collapse" id="myNavbar">
+                    <ul class="nav navbar-nav">
+                        <li class="@(ViewContext.RouteData.Values["Controller"].ToString() == "Home" ? "active" : "")">@Html.ActionLink("Home", "Index", "Home", new { Area = "" }, null)</li>
+                        <li class="dropdown @((ViewContext.RouteData.DataTokens["area"] ?? string.Empty).ToString() == "Blog" ? " active" : string.Empty)">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Blog<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("Blog Entry Management", "Index", "BlogEntries", new { Area = "Blog" }, null)</li>
+                            </ul>
+                        </li>
+                        <li class="dropdown @((ViewContext.RouteData.DataTokens["area"] ?? string.Empty).ToString() == "Admin" ? " active" : string.Empty)">
+                            <a class="dropdown-toggle" data-toggle="dropdown" href="#">Admin<span class="caret"></span></a>
+                            <ul class="dropdown-menu">
+                                <li>@Html.ActionLink("User & Group Management", "Index", "UserGroup", new { Area = "Admin" }, null)</li>
+                            </ul>
+                        </li>
+                        <li><a href="#">Page 3</a></li>
+                    </ul>
+                    <ul class="nav navbar-nav navbar-right">
+                        <li><a href="#"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+                        <li><a href="#"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+        <div class="container-fluid">
+            <!--<div class="container body-content">-->
+            @RenderBody()
+            @RenderSection("scripts", required: false)
+        </div>
+    </div>
+<div id="footer">
+    <div class="container">
+        <p>&copy; @DateTime.Now.Year - Kiet Duong's First Project</p>
+    </div>
+</div>
+    <div class="device-xs visible-xs"></div>
+    <div class="device-sm visible-sm"></div>
+    <div class="device-md visible-md"></div>
+    <div class="device-lg visible-lg"></div>
+</body>
+</html>

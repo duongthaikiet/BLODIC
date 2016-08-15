@@ -1,0 +1,61 @@
+﻿@model DuongThaiKiet.App_Data.Blog
+
+@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>Details</title>
+    <script src='~/Utility/tinymce_4.3.8/tinymce/js/tinymce/tinymce.min.js'></script>
+    <script>
+    tinymce.init({
+        selector: '#Content'
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <h4>@Html.DisplayFor(model => model.Title)</h4>
+        <hr />
+        <dl class="dl-horizontal">    
+            <dd>
+                @Html.DisplayFor(model => model.Title)
+            </dd>    
+    
+            <dd>
+                @Html.DisplayFor(model => model.Summary)
+            </dd>
+    
+            <dd>
+                @Html.DisplayFor(model => model.DateCreated)
+            </dd>
+    
+            <dd>
+                @Html.DisplayFor(model => model.DateModified)
+            </dd>
+    
+            <dd>
+                @Html.DisplayFor(model => model.UserID)
+            </dd>
+
+            <dd>
+                <!--TODO: Display content with full HTML format-->
+                @Html.Raw(Model.Content)
+            </dd>
+    
+            <dd>
+                @Html.DisplayFor(model => model.Image)
+            </dd>
+    
+        </dl>
+    </div>
+    <p>
+        @Html.ActionLink("Edit", "Edit", new { id = Model.BlogID }) |
+        @Html.ActionLink("Back to List", "Index")
+    </p>
+</body>
+</html>

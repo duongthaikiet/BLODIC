@@ -1,0 +1,107 @@
+﻿@model IEnumerable<DuongThaiKiet.DTKEF.BlogEntryModel>
+
+@{
+    ViewBag.Title = "Index";
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<head>
+    <title>Duong Thai Kiet's Blog Entries</title>
+</head>
+<script language="javascript">
+    function previewBlog(id, divId) {
+        var model = {
+            Id: id
+        };
+
+        $.ajax({
+            type: "POST",
+            url: "@Url.Action("BlogPreview", "BlogEntries", new { Area = "Blog" })",
+            data: JSON.stringify(model),
+            contentType: "application/json; charset=utf-8",
+            dataType: "json",
+            success: function (data) {
+                $('#' + divId).html("Title: " + data.Title + "<br>Created By: " + data.UserName + "<br>Date Added: " + data.DateCreated + "<br>Summary: " + data.Summary);
+            },
+            error: function () {
+                alert("There was an error. Try again please!");
+            }
+        });
+        return '<div id="' + divId + '">' + '<img src="/Content/Images/loading.gif" width="32" height="32" /></div>';
+    }
+</script>
+<script>
+    $(document).ready(function () {
+        $('[data-toggle="tooltip"]').tooltip();
+
+        $('[data-toggle="popover"]').popover({
+            trigger: "hover",
+            animation: "true",
+            html: true,
+            content: function() {
+                var divId = "tmp-id-" + $.now();
+                return previewBlog($(this).attr('id'), divId);
+            }
+        });
+    });
+</script>
+<style>
+    .short-text {        
+        text-overflow: ellipsis;
+        overflow: hidden;
+    }
+</style>
+<h2>Index</h2>
+<body>
+<p>
+    @Html.ActionLink("Create New", "Create")
+</p>
+<div style="overflow-x: auto; clear: both">
+    <div class="table-responsive">
+        <table class="table table-hover">
+            <!--<caption>Blog Entries</caption>-->
+            <tr>
+                <th style="width: 100px">
+                    @Html.DisplayNameFor(model => model.ImageURL)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Title)
+                </th>
+                <th class="nowrap">
+                    @Html.DisplayNameFor(model => model.AdminUser.UserName)
+                </th>
+                <th class="action-column">Action</th>
+            </tr>
+
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td style="width: 100px">
+                        <img src="@Html.DisplayFor(modelItem => item.ImageURL)" width="99" height="30" />
+                    </td>
+                    <td>
+                        <a id="@Html.DisplayFor(modelItem => item.Id)" data-toggle="popover" title="Preview Blog">
+                            <span class="glyphicon glyphicon-eye-open"></span>
+                        </a>
+                        
+                        @Html.DisplayFor(modelItem => item.Title)
+                    </td>
+                    <td class="nowrap">
+                        @Html.DisplayFor(modelItem => item.UserName)
+                    </td>
+                    <td class="action-column">
+                        <a data-toggle="tooltip" data-placement="auto" title="Edit" href="@Url.Action("Edit", "BlogEntries", new {id = item.Id})">
+                            <span class="glyphicon glyphicon-edit"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="auto" title="Details" href="@Url.Action("Details", "BlogEntries", new {id = item.Id})">
+                            <span class="glyphicon glyphicon-search"></span>
+                        </a>
+                        <a data-toggle="tooltip" data-placement="auto" title="Delete" href="@Url.Action("Delete", "BlogEntries", new {id = item.Id})">
+                            <span class="glyphicon glyphicon-remove"></span>
+                        </a>
+                    </td>
+                </tr>
+            }
+        </table>
+    </div>
+</div>
+</body>
